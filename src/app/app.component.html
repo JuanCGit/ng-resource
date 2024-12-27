@@ -1,8 +1,25 @@
 <div class="r-container">
   <div class="r-container__left">
-    <h1>Form</h1>
+    <p-select
+      [options]="numbers"
+      [optionLabel]="'number'"
+      placeholder="Select a number"
+      (onChange)="onNumberChange($event.value)"
+    ></p-select>
+    <p-select
+      [options]="textures"
+      [optionLabel]="'texture'"
+      placeholder="Select a texture"
+      (onChange)="onTextureChange($event.value)"
+    ></p-select>
+    <p-select
+      [options]="colors"
+      [optionLabel]="'color'"
+      placeholder="Select a color"
+      (onChange)="onColorChange($event.value)"
+    ></p-select>
   </div>
   <div class="r-container__right">
-    <h1>Image</h1>
+    <h1>{{ aiQuery() }}</h1>
   </div>
 </div>
