@@ -1,6 +1,8 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, resource, signal, viewChild } from '@angular/core';
 import { Select } from 'primeng/select';
 import { IColor, INumber, ITexture } from '../interfaces/select.interfaces';
+import { ImageGenerationService } from '../services/image-generation.service';
+import { firstValueFrom, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +42,15 @@ export class AppComponent {
       ? `Make an image of number ${number} with ${texture} texture and ${color} color`
       : undefined;
   });
+  imageResource = resource({
+    request: () => ({ aiQuery: this.aiQuery() }),
+    loader: async ({ request }) => {
+      const aiQuery = request.aiQuery;
+      return firstValueFrom(this.imageGenerationService.generateImage(aiQuery));
+    },
+  });
+
+  constructor(private imageGenerationService: ImageGenerationService) {}
 
   onNumberChange(selected: INumber): void {
     this.selectedNumber.set(selected.value);

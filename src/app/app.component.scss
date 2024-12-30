@@ -24,4 +24,25 @@
       }
     }
   }
+
+  &__right {
+    .content {
+      width: 50vw;
+      height: 50vw;
+
+      @media (min-width: 900px) {
+        width: 25vw;
+        height: 25vw;
+      }
+      
+      img {
+        width: 100%;
+        border-radius: 15px;
+        border-color: var(--p-select-focus-border-color);
+        box-shadow: var(--p-select-focus-ring-shadow);
+        outline: var(--p-select-focus-ring-width) var(—-p-select-focus-ring-style) var(--p-select-focus-ring-color);      
+        outline-offset: var(--p-select-focus-ing-offset)
+      }
+    }
+  }
 }

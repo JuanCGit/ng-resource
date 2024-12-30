@@ -20,6 +20,14 @@
     ></p-select>
   </div>
   <div class="r-container__right">
-    <h1>{{ aiQuery() }}</h1>
+    <div class="content">
+      @if (imageResource.hasValue()) {
+        @for (image of imageResource.value(); track $index) {
+          <img class="p-select p-focus" [src]="image"> 
+        }
+      } @else {
+        {{ "No hay Valores" }}
+      }
+    </div>
   </div>
 </div>
