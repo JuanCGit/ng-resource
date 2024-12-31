@@ -3,10 +3,11 @@ import { Select } from 'primeng/select';
 import { IColor, INumber, ITexture } from '../interfaces/select.interfaces';
 import { ImageGenerationService } from '../services/image-generation.service';
 import { firstValueFrom, of } from 'rxjs';
+import { LoaderComponent } from "./components/loader.component";
 
 @Component({
   selector: 'app-root',
-  imports: [Select],
+  imports: [Select, LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -44,9 +45,8 @@ export class AppComponent {
   });
   imageResource = resource({
     request: () => ({ aiQuery: this.aiQuery() }),
-    loader: async ({ request }) => {
-      const aiQuery = request.aiQuery;
-      return firstValueFrom(this.imageGenerationService.generateImage(aiQuery));
+    loader: async ({ request }) => {      
+      return firstValueFrom(this.imageGenerationService.generateImage(request.aiQuery));
     },
   });
 

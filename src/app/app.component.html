@@ -2,32 +2,72 @@
   <div class="r-container__left">
     <p-select
       [options]="numbers"
+      [disabled]="imageResource.isLoading()"
       [optionLabel]="'number'"
       placeholder="Select a number"
       (onChange)="onNumberChange($event.value)"
     ></p-select>
     <p-select
       [options]="textures"
+      [disabled]="imageResource.isLoading()"
       [optionLabel]="'texture'"
       placeholder="Select a texture"
       (onChange)="onTextureChange($event.value)"
     ></p-select>
     <p-select
       [options]="colors"
+      [disabled]="imageResource.isLoading()"
       [optionLabel]="'color'"
       placeholder="Select a color"
       (onChange)="onColorChange($event.value)"
     ></p-select>
   </div>
   <div class="r-container__right">
-    <div class="content">
-      @if (imageResource.hasValue()) {
-        @for (image of imageResource.value(); track $index) {
-          <img class="p-select p-focus" [src]="image"> 
+    <div class="r-container__content">
+      @if (aiQuery()) {
+        @if (imageResource.isLoading()) {
+          <app-loader></app-loader>
+        } @else if (imageResource.hasValue()) {
+          @for (image of imageResource.value(); track $index) {
+            <div
+              class="r-container__image"
+              [style.background-image]="'url(' + image + ')'"
+            ></div>
+          }
+        } @else if (imageResource.error()) {
+          <h2>There has been an error</h2>
+        } @else {
+          <h2>The current resource haven been destroyed</h2>
         }
       } @else {
-        {{ "No hay Valores" }}
+        <h2>Select all the options</h2>
       }
+    </div>
+    <div class="r-container__actions">
+      <img
+        src="../assets/reload.svg"
+        alt="reload resource"
+        [class.disabled]="
+          !imageResource.hasValue() || imageResource.isLoading()
+        "
+        (click)="
+          imageResource.hasValue() &&
+            !imageResource.isLoading() &&
+            imageResource.reload()
+        "
+      />
+      <img
+        src="../assets/destroy.svg"
+        alt="destroy resource"
+        [class.disabled]="
+          !imageResource.hasValue() || imageResource.isLoading()
+        "
+        (click)="
+          imageResource.hasValue() &&
+            !imageResource.isLoading() &&
+            imageResource.destroy()
+        "
+      />
     </div>
   </div>
 </div>

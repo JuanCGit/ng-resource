@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment';
 import { IImageResponse } from '../interfaces/image-response.interface';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,12 +26,11 @@ export class ImageGenerationService {
       n,
       size,
     };
-    /*return this.http.post<IImageResponse>(this.apiUrl, body, {
+    return this.http.post<IImageResponse>(this.apiUrl, body, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.apiKey}`,
       },
-    })*/
-    return of(['https://thispersondoesnotexist.com/']);
+    }).pipe(map((resp) => resp.data.map((img) => img.url)))
   }
 }
