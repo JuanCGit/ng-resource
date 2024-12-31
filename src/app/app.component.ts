@@ -1,15 +1,22 @@
-import { Component, computed, resource, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  resource,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Select } from 'primeng/select';
 import { IColor, INumber, ITexture } from '../interfaces/select.interfaces';
 import { ImageGenerationService } from '../services/image-generation.service';
 import { firstValueFrom, of } from 'rxjs';
-import { LoaderComponent } from "./components/loader.component";
+import { LoaderComponent } from './components/loader.component';
 
 @Component({
   selector: 'app-root',
   imports: [Select, LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  standalone: true,
 })
 export class AppComponent {
   title = 'ng-resource';
@@ -45,8 +52,10 @@ export class AppComponent {
   });
   imageResource = resource({
     request: () => ({ aiQuery: this.aiQuery() }),
-    loader: async ({ request }) => {      
-      return firstValueFrom(this.imageGenerationService.generateImage(request.aiQuery));
+    loader: async ({ request }) => {
+      return firstValueFrom(
+        this.imageGenerationService.generateImage(request.aiQuery),
+      );
     },
   });
 
