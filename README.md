@@ -25,8 +25,8 @@ This project demonstrates the use of the new Angular `resource` to streamline HT
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/angular-ai-image-generator.git
-   cd angular-ai-image-generator
+   git clone https://github.com/JuanCGit/ng-resource.git
+   cd ng-resource
    ```
 2. Install dependencies:
    ```bash
