@@ -1,15 +1,10 @@
-import {
-  Component,
-  computed,
-  resource,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, resource, signal } from '@angular/core';
 import { Select } from 'primeng/select';
-import { IColor, INumber, ITexture } from '../interfaces/select.interfaces';
-import { ImageGenerationService } from '../services/image-generation.service';
-import { firstValueFrom, of } from 'rxjs';
+import { IColor, INumber, ITexture } from './interfaces/select.interfaces';
+import { ImageGenerationService } from './services/image-generation.service';
+import { firstValueFrom } from 'rxjs';
 import { LoaderComponent } from './components/loader.component';
+import { colors, numbers, textures } from './consts/select-options.consts';
 
 @Component({
   selector: 'app-root',
@@ -19,28 +14,16 @@ import { LoaderComponent } from './components/loader.component';
   standalone: true,
 })
 export class AppComponent {
-  title = 'ng-resource';
-  numbers: INumber[] = [
-    { number: 'One', value: 1 },
-    { number: 'Two', value: 2 },
-    { number: 'Three', value: 3 },
-    { number: 'Four', value: 4 },
-  ];
-  colors: IColor[] = [
-    { color: 'Red', value: 'red' },
-    { color: 'Green', value: 'green' },
-    { color: 'Blue', value: 'blue' },
-    { color: 'Yellow', value: 'yellow' },
-  ];
-  textures: ITexture[] = [
-    { texture: 'Hairy', value: 'hairy' },
-    { texture: 'Viscous', value: 'viscous' },
-    { texture: 'Hard', value: 'hard' },
-    { texture: 'Liquid', value: 'liquid' },
-  ];
+  protected readonly colors = colors;
+  protected readonly textures = textures;
+  protected readonly numbers = numbers;
+
   selectedNumber = signal<number | undefined>(undefined);
   selectedColor = signal<string | undefined>(undefined);
   selectedTexture = signal<string | undefined>(undefined);
+
+  doYouOweMeCoffee = signal<boolean>(false);
+
   aiQuery = computed(() => {
     const number = this.selectedNumber();
     const color = this.selectedColor();
@@ -53,13 +36,36 @@ export class AppComponent {
   imageResource = resource({
     request: () => ({ aiQuery: this.aiQuery() }),
     loader: async ({ request }) => {
+      this.#incrementCallCounter(request.aiQuery);
       return firstValueFrom(
-        this.imageGenerationService.generateImage(request.aiQuery),
+        this.imageGenerationService.generateImage(
+          this.doYouOweMeCoffee(),
+          request.aiQuery,
+        ),
       );
     },
   });
 
-  constructor(private imageGenerationService: ImageGenerationService) {}
+  constructor(private imageGenerationService: ImageGenerationService) {
+    this.#initializeCallCounter();
+  }
+
+  #initializeCallCounter(): void {
+    debugger;
+    const callCount = localStorage.getItem('callCounter');
+    const callCountNumber = Number(callCount);
+    if (callCount === null || callCountNumber < 5)
+      localStorage.setItem('callCounter', String(callCountNumber));
+    else this.doYouOweMeCoffee.set(true);
+  }
+
+  #incrementCallCounter(aiQuery?: string): void {
+    if (!aiQuery) return;
+    const callCount = Number(localStorage.getItem('callCounter')) || 0;
+    const updatedCount = callCount + 1;
+    localStorage.setItem('callCounter', updatedCount.toString());
+    if (updatedCount >= 5) this.doYouOweMeCoffee.set(true);
+  }
 
   onNumberChange(selected: INumber): void {
     this.selectedNumber.set(selected.value);

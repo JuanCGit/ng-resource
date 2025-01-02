@@ -1,82 +1,89 @@
-<div class="r-container">
-  <div class="r-container__left">
-    <p-select
-      [options]="numbers"
-      [disabled]="
+@if(!doYouOweMeCoffee()) {
+  <div class="main-container">
+    <div class="main-container__left">
+      <p-select
+        [options]="numbers"
+        [disabled]="
         (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
         imageResource.isLoading()
       "
-      [optionLabel]="'number'"
-      placeholder="Select a number"
-      (onChange)="onNumberChange($event.value)"
-    ></p-select>
-    <p-select
-      [options]="textures"
-      [disabled]="
+        [optionLabel]="'number'"
+        placeholder="Select a number"
+        (onChange)="onNumberChange($event.value)"
+      ></p-select>
+      <p-select
+        [options]="textures"
+        [disabled]="
         (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
         imageResource.isLoading()
       "
-      [optionLabel]="'texture'"
-      placeholder="Select a texture"
-      (onChange)="onTextureChange($event.value)"
-    ></p-select>
-    <p-select
-      [options]="colors"
-      [disabled]="
+        [optionLabel]="'texture'"
+        placeholder="Select a texture"
+        (onChange)="onTextureChange($event.value)"
+      ></p-select>
+      <p-select
+        [options]="colors"
+        [disabled]="
         (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
         imageResource.isLoading()
       "
-      [optionLabel]="'color'"
-      placeholder="Select a color"
-      (onChange)="onColorChange($event.value)"
-    ></p-select>
-  </div>
-  <div class="r-container__right">
-    <div class="r-container__content">
-      @if (aiQuery()) {
-        @if (imageResource.isLoading()) {
-          <app-loader></app-loader>
-        } @else if (imageResource.hasValue()) {
-          @for (image of imageResource.value(); track $index) {
-            <div
-              class="r-container__image"
-              [style.background-image]="'url(' + image + ')'"
-            ></div>
-          }
-        } @else if (imageResource.error()) {
-          <h2>There has been an error</h2>
-        } @else {
-          <h2>The current resource has been destroyed</h2>
-        }
-      } @else {
-        <h2>Select all the options</h2>
-      }
+        [optionLabel]="'color'"
+        placeholder="Select a color"
+        (onChange)="onColorChange($event.value)"
+      ></p-select>
     </div>
-    <div class="r-container__actions">
-      <img
-        src="../assets/reload.svg"
-        alt="reload resource"
-        [class.disabled]="
+    <div class="main-container__right">
+      <div class="main-container__content">
+        @if (aiQuery()) {
+          @if (imageResource.isLoading()) {
+            <app-loader></app-loader>
+          } @else if (imageResource.hasValue()) {
+            @for (image of imageResource.value(); track $index) {
+              <div
+                class="main-container__image"
+                [style.background-image]="'url(' + image + ')'"
+              ></div>
+            }
+          } @else if (imageResource.error()) {
+            <h2>There has been an error</h2>
+          } @else {
+            <h2>The current resource has been destroyed</h2>
+          }
+        } @else {
+          <h2>Select all the options</h2>
+        }
+      </div>
+      <div class="main-container__actions">
+        <img
+          src="../assets/reload.svg"
+          alt="reload resource"
+          [class.disabled]="
           !imageResource.hasValue() || imageResource.isLoading()
         "
-        (click)="
+          (click)="
           imageResource.hasValue() &&
             !imageResource.isLoading() &&
             imageResource.reload()
         "
-      />
-      <img
-        src="../assets/destroy.svg"
-        alt="destroy resource"
-        [class.disabled]="
+        />
+        <img
+          src="../assets/destroy.svg"
+          alt="destroy resource"
+          [class.disabled]="
           !imageResource.hasValue() || imageResource.isLoading()
         "
-        (click)="
+          (click)="
           imageResource.hasValue() &&
             !imageResource.isLoading() &&
             imageResource.destroy()
         "
-      />
+        />
+      </div>
     </div>
   </div>
-</div>
+} @else {
+  <div class="coffee-container">
+    <h1>You owe me a coffee ;)</h1>
+  </div>
+}
+
