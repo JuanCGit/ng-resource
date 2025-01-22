@@ -1,12 +1,12 @@
-@if(!doYouOweMeCoffee()) {
+@if (!doYouOweMeCoffee()) {
   <div class="main-container">
     <div class="main-container__left">
       <p-select
         [options]="numbers"
         [disabled]="
-        (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
-        imageResource.isLoading()
-      "
+          (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
+          imageResource.isLoading()
+        "
         [optionLabel]="'number'"
         placeholder="Select a number"
         (onChange)="onNumberChange($event.value)"
@@ -14,9 +14,9 @@
       <p-select
         [options]="textures"
         [disabled]="
-        (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
-        imageResource.isLoading()
-      "
+          (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
+          imageResource.isLoading()
+        "
         [optionLabel]="'texture'"
         placeholder="Select a texture"
         (onChange)="onTextureChange($event.value)"
@@ -24,9 +24,9 @@
       <p-select
         [options]="colors"
         [disabled]="
-        (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
-        imageResource.isLoading()
-      "
+          (aiQuery() && !imageResource.hasValue() && !imageResource.error()) ||
+          imageResource.isLoading()
+        "
         [optionLabel]="'color'"
         placeholder="Select a color"
         (onChange)="onColorChange($event.value)"
@@ -38,12 +38,10 @@
           @if (imageResource.isLoading()) {
             <app-loader></app-loader>
           } @else if (imageResource.hasValue()) {
-            @for (image of imageResource.value(); track $index) {
-              <div
-                class="main-container__image"
-                [style.background-image]="'url(' + image + ')'"
-              ></div>
-            }
+            <div
+              class="main-container__image"
+              [style.background-image]="'url(' + imageResource.value() + ')'"
+            ></div>
           } @else if (imageResource.error()) {
             <h2>There has been an error</h2>
           } @else {
@@ -58,25 +56,25 @@
           src="../assets/reload.svg"
           alt="reload resource"
           [class.disabled]="
-          !imageResource.hasValue() || imageResource.isLoading()
-        "
+            !imageResource.hasValue() || imageResource.isLoading()
+          "
           (click)="
-          imageResource.hasValue() &&
-            !imageResource.isLoading() &&
-            imageResource.reload()
-        "
+            imageResource.hasValue() &&
+              !imageResource.isLoading() &&
+              imageResource.reload()
+          "
         />
         <img
           src="../assets/destroy.svg"
           alt="destroy resource"
           [class.disabled]="
-          !imageResource.hasValue() || imageResource.isLoading()
-        "
+            !imageResource.hasValue() || imageResource.isLoading()
+          "
           (click)="
-          imageResource.hasValue() &&
-            !imageResource.isLoading() &&
-            imageResource.destroy()
-        "
+            imageResource.hasValue() &&
+              !imageResource.isLoading() &&
+              imageResource.destroy()
+          "
         />
       </div>
     </div>
@@ -86,4 +84,3 @@
     <h1>You owe me a coffee ;)</h1>
   </div>
 }
-

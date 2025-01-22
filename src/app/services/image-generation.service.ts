@@ -19,7 +19,7 @@ export class ImageGenerationService {
     prompt?: string,
     size: string = '1024x1024',
     n: number = 1,
-  ): Observable<string[]> {
+  ): Observable<string> {
     if (!prompt || doYouOweMeCoffee) return EMPTY;
     const body = {
       model: this.model,
@@ -39,7 +39,7 @@ export class ImageGenerationService {
           console.log(error);
           return EMPTY;
         }),
-        map((resp) => resp.data.map((img) => img.url)),
+        map((resp) => (resp.data.length ? resp.data[0].url : '')),
       );
   }
 }
