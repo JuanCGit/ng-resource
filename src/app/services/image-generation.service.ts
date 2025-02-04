@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environment';
 import { IImageResponse } from '../interfaces/image-response.interface';
@@ -8,11 +8,10 @@ import { catchError, EMPTY, map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ImageGenerationService {
-  private apiUrl = environment.openAI.apiUrl;
-  private apiKey = environment.openAI.apiKey;
-  private model = environment.openAI.model;
-
-  constructor(private http: HttpClient) {}
+  #http = inject(HttpClient);
+  #apiUrl = environment.openAI.apiUrl;
+  #apiKey = environment.openAI.apiKey;
+  #model = environment.openAI.model;
 
   generateImage(
     doYouOweMeCoffee: boolean,
@@ -22,16 +21,16 @@ export class ImageGenerationService {
   ): Observable<string> {
     if (!prompt || doYouOweMeCoffee) return EMPTY;
     const body = {
-      model: this.model,
+      model: this.#model,
       prompt,
       n,
       size,
     };
-    return this.http
-      .post<IImageResponse>(this.apiUrl, body, {
+    return this.#http
+      .post<IImageResponse>(this.#apiUrl, body, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.#apiKey}`,
         },
       })
       .pipe(

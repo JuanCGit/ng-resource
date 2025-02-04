@@ -1,4 +1,4 @@
-import { Component, computed, resource, signal } from '@angular/core';
+import { Component, computed, inject, resource, signal } from '@angular/core';
 import { Select } from 'primeng/select';
 import { IColor, INumber, ITexture } from './interfaces/select.interfaces';
 import { ImageGenerationService } from './services/image-generation.service';
@@ -14,6 +14,8 @@ import { colors, numbers, textures } from './consts/select-options.consts';
   standalone: true,
 })
 export class AppComponent {
+  #imageGenerationService = inject(ImageGenerationService);
+
   protected readonly colors = colors;
   protected readonly textures = textures;
   protected readonly numbers = numbers;
@@ -38,7 +40,7 @@ export class AppComponent {
     loader: async ({ request }) => {
       this.#incrementCallCounter(request.aiQuery);
       return firstValueFrom(
-        this.imageGenerationService.generateImage(
+        this.#imageGenerationService.generateImage(
           this.doYouOweMeCoffee(),
           request.aiQuery,
         ),
@@ -46,12 +48,23 @@ export class AppComponent {
     },
   });
 
-  constructor(private imageGenerationService: ImageGenerationService) {
+  constructor() {
     this.#initializeCallCounter();
   }
 
+  onNumberChange(selected: INumber): void {
+    this.selectedNumber.set(selected.value);
+  }
+
+  onColorChange(selected: IColor): void {
+    this.selectedColor.set(selected.value);
+  }
+
+  onTextureChange(selected: ITexture): void {
+    this.selectedTexture.set(selected.value);
+  }
+
   #initializeCallCounter(): void {
-    debugger;
     const callCount = localStorage.getItem('callCounter');
     const callCountNumber = Number(callCount);
     if (callCount === null || callCountNumber < 5)
@@ -65,17 +78,5 @@ export class AppComponent {
     const updatedCount = callCount + 1;
     localStorage.setItem('callCounter', updatedCount.toString());
     if (updatedCount >= 5) this.doYouOweMeCoffee.set(true);
-  }
-
-  onNumberChange(selected: INumber): void {
-    this.selectedNumber.set(selected.value);
-  }
-
-  onColorChange(selected: IColor): void {
-    this.selectedColor.set(selected.value);
-  }
-
-  onTextureChange(selected: ITexture): void {
-    this.selectedTexture.set(selected.value);
   }
 }
