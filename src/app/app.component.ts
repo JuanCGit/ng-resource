@@ -1,4 +1,6 @@
-import { Component, computed, inject, resource, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+
 import { Select } from 'primeng/select';
 import { IColor, INumber, ITexture } from './interfaces/select.interfaces';
 import { ImageGenerationService } from './services/image-generation.service';
@@ -35,15 +37,13 @@ export class AppComponent {
       ? `Make an image of number ${number} with ${texture} texture and ${color} color`
       : undefined;
   });
-  imageResource = resource({
+  imageResource = rxResource({
     request: () => ({ aiQuery: this.aiQuery() }),
-    loader: async ({ request }) => {
+    loader: ({ request }) => {
       this.#incrementCallCounter(request.aiQuery);
-      return firstValueFrom(
-        this.#imageGenerationService.generateImage(
-          this.doYouOweMeCoffee(),
-          request.aiQuery,
-        ),
+      return this.#imageGenerationService.generateImage(
+        this.doYouOweMeCoffee(),
+        request.aiQuery,
       );
     },
   });
