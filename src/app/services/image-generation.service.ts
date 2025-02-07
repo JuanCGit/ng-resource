@@ -9,8 +9,7 @@ import { catchError, EMPTY, map, Observable } from 'rxjs';
 })
 export class ImageGenerationService {
   #http = inject(HttpClient);
-  #apiUrl = environment.openAI.apiUrl;
-  #apiKey = environment.openAI.apiKey;
+  #apiUrl = environment.apiUrl;
   #model = environment.openAI.model;
 
   generateImage(
@@ -27,10 +26,9 @@ export class ImageGenerationService {
       size,
     };
     return this.#http
-      .post<IImageResponse>(this.#apiUrl, body, {
+      .post<IImageResponse>(`${this.#apiUrl}/image`, body, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.#apiKey}`,
         },
       })
       .pipe(
