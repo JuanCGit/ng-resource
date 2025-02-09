@@ -9,6 +9,7 @@ COPY ./tsconfig.json /usr/local/app
 COPY ./tsconfig.app.json /usr/local/app
 COPY ./tsconfig.spec.json /usr/local/app
 COPY ./angular.json /usr/local/app
+COPY ./environment.ts /usr/local/app
 
 
 RUN npm install
